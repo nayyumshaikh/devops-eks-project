@@ -60,3 +60,15 @@ module "ecr" {
 output "ecr_repository_url" {
   value = module.ecr.repository_url
 }
+
+module "eks" {
+  source                   = "../../modules/eks"
+  cluster_name             = local.cluster_name
+  control_plane_subnet_ids = concat(module.network.private_subnet_ids, module.network.public_subnet_ids)
+  node_subnet_ids          = module.network.private_subnet_ids
+  node_instance_types      = ["t3.small"]
+}
+
+output "eks_cluster_name" {
+  value = module.eks.cluster_name
+}
