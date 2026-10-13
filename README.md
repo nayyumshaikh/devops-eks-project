@@ -4,7 +4,7 @@ Flask API deployed to AWS EKS using Terraform, GitHub Actions, Docker, Kubernete
 
 ## Status
 - [x] Step 1: Repo, app, Dockerfile
-- [ ] Step 2: Terraform infra (VPC, EKS, ECR)
+- [x] Step 2: Terraform infra (VPC, EKS, ECR)
 - [ ] Step 3: GitHub Actions pipeline
 - [ ] Step 4: Deploy to EKS
 - [ ] Step 5: CloudWatch monitoring
