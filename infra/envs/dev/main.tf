@@ -72,3 +72,14 @@ module "eks" {
 output "eks_cluster_name" {
   value = module.eks.cluster_name
 }
+
+module "github_oidc" {
+  source             = "../../modules/github-oidc"
+  name               = local.name
+  github_repo        = "nayyumshaikh/devops-eks-project"
+  ecr_repository_arn = module.ecr.repository_arn
+}
+
+output "github_ci_role_arn" {
+  value = module.github_oidc.role_arn
+}
