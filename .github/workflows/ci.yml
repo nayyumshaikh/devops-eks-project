@@ -124,7 +124,8 @@ jobs:
         run: aws eks update-kubeconfig --name "${{ vars.EKS_CLUSTER_NAME }}" --region "${{ vars.AWS_REGION }}"
 
       - name: Set image tag
-        run: sed -i "s|newTag: .*|newTag: ${IMAGE_TAG}|" k8s/base/kustomization.yaml
+        run: |
+          sed -i "s|newTag: .*|newTag: ${IMAGE_TAG}|" k8s/base/kustomization.yaml
 
       - name: Show rendered manifests
         run: kubectl kustomize k8s/base
