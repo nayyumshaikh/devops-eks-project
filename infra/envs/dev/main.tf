@@ -76,7 +76,7 @@ output "eks_cluster_name" {
 module "github_oidc" {
   source             = "../../modules/github-oidc"
   name               = local.name
-  github_repo        = "nayyumshaikh/devops-eks-project"
+  github_repo        = "nayyumshaikh@137756485/devops-eks-project@1415876054"
   ecr_repository_arn = module.ecr.repository_arn
 }
 
