@@ -78,8 +78,32 @@ module "github_oidc" {
   name               = local.name
   github_repo        = "nayyumshaikh@137756485/devops-eks-project@1415876054"
   ecr_repository_arn = module.ecr.repository_arn
+  cluster_name       = local.cluster_name
 }
 
 output "github_ci_role_arn" {
   value = module.github_oidc.role_arn
+}
+
+resource "aws_eks_access_entry" "github_deploy" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = module.github_oidc.deploy_role_arn
+  type          = "STANDARD"
+}
+
+resource "aws_eks_access_policy_association" "github_deploy" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = module.github_oidc.deploy_role_arn
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSEditPolicy"
+
+  access_scope {
+    type       = "namespace"
+    namespaces = ["devops-app"]
+  }
+
+  depends_on = [aws_eks_access_entry.github_deploy]
+}
+
+output "github_deploy_role_arn" {
+  value = module.github_oidc.deploy_role_arn
 }

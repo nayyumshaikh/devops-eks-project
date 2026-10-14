@@ -99,3 +99,39 @@ jobs:
             docker tag "$ECR_REPOSITORY:$IMAGE_TAG" "$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
             docker push "$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           fi
+
+  deploy:
+    name: deploy
+    needs: [image]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment: dev
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      IMAGE_TAG: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC, deploy role)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name "${{ vars.EKS_CLUSTER_NAME }}" --region "${{ vars.AWS_REGION }}"
+
+      - name: Set image tag
+        run: |
+          sed -i "s|newTag: .*|newTag: ${IMAGE_TAG}|" k8s/base/kustomization.yaml
+
+      - name: Show rendered manifests
+        run: kubectl kustomize k8s/base
+
+      - name: Deploy
+        run: kubectl apply -k k8s/base
+
+      - name: Wait for rollout
+        run: kubectl rollout status deployment/devops-app -n devops-app --timeout=180s
