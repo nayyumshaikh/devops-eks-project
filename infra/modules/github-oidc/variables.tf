@@ -10,3 +10,12 @@ variable "github_repo" {
 variable "ecr_repository_arn" {
   type = string
 }
+
+variable "cluster_name" {
+  type = string
+}
+
+variable "deploy_environment" {
+  type    = string
+  default = "dev"
+}
