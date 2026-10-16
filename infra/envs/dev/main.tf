@@ -107,3 +107,14 @@ resource "aws_eks_access_policy_association" "github_deploy" {
 output "github_deploy_role_arn" {
   value = module.github_oidc.deploy_role_arn
 }
+
+module "monitoring" {
+  source       = "../../modules/monitoring"
+  name         = local.name
+  cluster_name = local.cluster_name
+  alert_email  = var.alert_email
+}
+
+output "dashboard_name" {
+  value = module.monitoring.dashboard_name
+}
