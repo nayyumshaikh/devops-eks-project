@@ -9,3 +9,5 @@ Flask API deployed to AWS EKS using Terraform, GitHub Actions, Docker, Kubernete
 - [x] Step 4: Deploy to EKS
 - [ ] Step 5: CloudWatch monitoring
 - [ ] Step 6: Docs and architecture diagram
+
+<!-- redeploy -->
