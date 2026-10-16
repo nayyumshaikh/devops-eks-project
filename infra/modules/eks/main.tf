@@ -62,6 +62,7 @@ resource "aws_iam_role_policy_attachment" "node" {
     "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
     "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+    "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy",
   ])
 
   role       = aws_iam_role.node.name
@@ -90,4 +91,11 @@ resource "aws_eks_node_group" "this" {
   }
 
   depends_on = [aws_iam_role_policy_attachment.node]
+}
+
+resource "aws_eks_addon" "cloudwatch_observability" {
+  cluster_name = aws_eks_cluster.this.name
+  addon_name   = "amazon-cloudwatch-observability"
+
+  depends_on = [aws_eks_node_group.this, aws_iam_role_policy_attachment.node]
 }
