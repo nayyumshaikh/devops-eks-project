@@ -156,3 +156,4 @@ The EKS control plane, the NAT gateway and the worker nodes are the billable par
 - Review which workloads the CloudWatch add-on auto-instruments.
 - Add metrics-server and a Horizontal Pod Autoscaler, plus an ingress.
 - Package the manifests as a Helm chart or add Argo CD for GitOps-style deployments.
+
